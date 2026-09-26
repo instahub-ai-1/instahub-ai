@@ -1,157 +1,76 @@
-const express = require("express");
-const cors = require("cors");
-const youtubedl = require("youtube-dl-exec");
-const path = require("path");
-const fs = require("fs");
-const os = require("os");
-const crypto = require("crypto");
+Update my existing InstaHub AI project.
 
-const app = express();
+IMPORTANT:
+- Do NOT redesign the website.
+- Do NOT remove any existing functionality.
+- Do NOT change the frontend.
+- Do NOT change package.json unless absolutely necessary.
+- Keep the existing Express server, CORS, routes, temporary file handling, media route, download-file route, and automatic cleanup.
+- The project already has "youtube-dl-exec": "^3.1.15" installed.
+- Use the bundled yt-dlp through youtube-dl-exec. Do NOT use execFile("yt-dlp", ...).
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+MAIN PROBLEM:
+The server currently logs:
 
-const DOWNLOAD_DIR = path.join(os.tmpdir(), "instahub-ai");
+YT-DLP ERROR
+MESSAGE:
 
-if (!fs.existsSync(DOWNLOAD_DIR)) {
-  fs.mkdirSync(DOWNLOAD_DIR, { recursive: true });
-}
+but MESSAGE is blank, so the real yt-dlp error is hidden.
 
-const files = new Map();
+TASK:
+Completely update server.js so that:
+1. It imports:
+   const youtubedl = require("youtube-dl-exec");
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
+2. The /download route uses:
+   await youtubedl(link, options, { timeout: 120000 })
 
-app.get("/download", async (req, res) => {
-  const link = req.query.link;
+3. Keep these yt-dlp options:
+   - noPlaylist: true
+   - noWarnings: true
+   - format: "best[ext=mp4]/best"
+   - output: outputFile
+   - restrictFilenames: true
+   - socketTimeout: 60
+   - retries: 3
+   - userAgent: Chrome/140 style browser user agent
+   - referer: https://www.instagram.com/
 
-  console.log("=================================");
-  console.log("REQUEST RECEIVED:", link);
+4. Keep the existing:
+   GET /
+   GET /download
+   GET /media/:id
+   GET /download-file/:id
 
-  if (!link || !link.includes("instagram.com")) {
-    return res.status(400).json({
-      success: false,
-      message: "Valid Instagram URL required"
-    });
-  }
+5. Keep temporary MP4 storage and 10-minute automatic cleanup.
 
-  const id = crypto.randomUUID();
-  const outputFile = path.join(DOWNLOAD_DIR, `${id}.mp4`);
+6. Most importantly, create a detailed catch block that logs ALL available yt-dlp error information:
 
-  console.log("STARTING BUNDLED YT-DLP...");
-  console.log("OUTPUT FILE:", outputFile);
+   console.log("=================================");
+   console.log("YT-DLP ERROR");
+   console.log("MESSAGE:", error.message);
+   console.log("CODE:", error.code);
+   console.log("STDERR:", error.stderr);
+   console.log("STDOUT:", error.stdout);
+   console.log("STACK:", error.stack);
+   console.log(
+     "FULL ERROR:",
+     JSON.stringify(error, Object.getOwnPropertyNames(error), 2)
+   );
+   console.log("=================================");
 
-  try {
-    await youtubedl(link, {
-      noPlaylist: true,
-      noWarnings: true,
-      format: "best[ext=mp4]/best",
-      output: outputFile,
-      restrictFilenames: true,
-      socketTimeout: 60,
-      retries: 3,
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
-      referer: "https://www.instagram.com/"
-    }, {
-      timeout: 120000
-    });
+7. The JSON error response must return the actual available error:
+   error.stderr || error.stdout || error.message || "Unknown yt-dlp error"
 
-    console.log("YT-DLP FINISHED SUCCESSFULLY");
+8. Keep server listening on:
+   const PORT = process.env.PORT || 10000;
+   app.listen(PORT, "0.0.0.0", ...)
 
-    if (!fs.existsSync(outputFile)) {
-      console.log("MP4 FILE NOT FOUND");
+9. At startup log:
+   InstaHub AI running on port <PORT>
+   REAL VIDEO DOWNLOADER ACTIVE
+   BUNDLED YT-DLP ACTIVE
 
-      return res.status(500).json({
-        success: false,
-        message: "Video file was not created"
-      });
-    }
+10. Do not add fake download success messages. Only return success when the MP4 file actually exists and has a size greater than 0.
 
-    const size = fs.statSync(outputFile).size;
-
-    console.log("FILE SIZE:", size);
-
-    if (size <= 0) {
-      return res.status(500).json({
-        success: false,
-        message: "Downloaded file is empty"
-      });
-    }
-
-    files.set(id, {
-      path: outputFile,
-      created: Date.now()
-    });
-
-    console.log("VIDEO READY:", id);
-    console.log("=================================");
-
-    setTimeout(() => {
-      const file = files.get(id);
-
-      if (file) {
-        try {
-          if (fs.existsSync(file.path)) {
-            fs.unlinkSync(file.path);
-          }
-        } catch (e) {
-          console.log("Cleanup error:", e.message);
-        }
-
-        files.delete(id);
-      }
-    }, 10 * 60 * 1000);
-
-    return res.json({
-      success: true,
-      title: "Instagram Reel",
-      mediaUrl: `/media/${id}`,
-      downloadUrl: `/download-file/${id}`
-    });
-
-  } catch (error) {
-    console.log("=================================");
-    console.log("YT-DLP ERROR");
-    console.log("MESSAGE:", error.message);
-    console.log("=================================");
-
-    return res.status(500).json({
-      success: false,
-      message: "Video download failed",
-      error: error.stderr || error.message
-    });
-  }
-});
-
-app.get("/media/:id", (req, res) => {
-  const file = files.get(req.params.id);
-
-  if (!file || !fs.existsSync(file.path)) {
-    return res.status(404).send("Video not found or expired.");
-  }
-
-  res.sendFile(file.path);
-});
-
-app.get("/download-file/:id", (req, res) => {
-  const file = files.get(req.params.id);
-
-  if (!file || !fs.existsSync(file.path)) {
-    return res.status(404).send("Video not found or expired.");
-  }
-
-  res.download(file.path, "instahub-ai-reel.mp4");
-});
-
-const PORT = process.env.PORT || 10000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("=================================");
-  console.log("InstaHub AI running on port " + PORT);
-  console.log("REAL VIDEO DOWNLOADER ACTIVE");
-  console.log("BUNDLED YT-DLP ACTIVE");
-  console.log("=================================");
-});
+Return the complete final server.js code only.
