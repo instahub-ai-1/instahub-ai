@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const youtubedl = require("youtube-dl-exec");
+const { execFile } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
@@ -24,9 +24,10 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/download", async (req, res) => {
+app.get("/download", (req, res) => {
   const link = req.query.link;
 
+  console.log("=================================");
   console.log("REQUEST RECEIVED:", link);
 
   if (!link || !link.includes("instagram.com")) {
@@ -39,22 +40,58 @@ app.get("/download", async (req, res) => {
   const id = crypto.randomUUID();
   const outputFile = path.join(DOWNLOAD_DIR, `${id}.mp4`);
 
-  try {
-    console.log("DOWNLOADING VIDEO...");
+  const args = [
+    link,
+    "--no-playlist",
+    "--no-warnings",
+    "--format",
+    "best[ext=mp4]/best",
+    "--output",
+    outputFile,
+    "--restrict-filenames",
+    "--socket-timeout",
+    "60",
+    "--retries",
+    "3",
+    "--user-agent",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
+    "--referer",
+    "https://www.instagram.com/"
+  ];
 
-    await youtubedl(link, {
-      noPlaylist: true,
-      noWarnings: true,
-      format: "best[ext=mp4]/best",
-      output: outputFile,
-      restrictFilenames: true,
-      socketTimeout: 30000
-    });
+  console.log("STARTING YT-DLP...");
 
-    console.log("CHECKING FILE...");
+  execFile("yt-dlp", args, {
+    timeout: 120000
+  }, (error, stdout, stderr) => {
+
+    console.log("YT-DLP STDOUT:");
+    console.log(stdout);
+
+    console.log("YT-DLP STDERR:");
+    console.log(stderr);
+
+    if (error) {
+      console.log("=================================");
+      console.log("YT-DLP ERROR");
+      console.log("MESSAGE:", error.message);
+      console.log("CODE:", error.code);
+      console.log("=================================");
+
+      return res.status(500).json({
+        success: false,
+        message: "Video download failed",
+        error: stderr || error.message
+      });
+    }
 
     if (!fs.existsSync(outputFile)) {
-      throw new Error("MP4 file was not created");
+      console.log("MP4 FILE NOT FOUND");
+
+      return res.status(500).json({
+        success: false,
+        message: "Video file was not created"
+      });
     }
 
     const size = fs.statSync(outputFile).size;
@@ -62,7 +99,10 @@ app.get("/download", async (req, res) => {
     console.log("FILE SIZE:", size);
 
     if (size <= 0) {
-      throw new Error("Downloaded file is empty");
+      return res.status(500).json({
+        success: false,
+        message: "Downloaded file is empty"
+      });
     }
 
     files.set(id, {
@@ -71,6 +111,7 @@ app.get("/download", async (req, res) => {
     });
 
     console.log("VIDEO READY:", id);
+    console.log("=================================");
 
     setTimeout(() => {
       const file = files.get(id);
@@ -94,18 +135,7 @@ app.get("/download", async (req, res) => {
       mediaUrl: `/media/${id}`,
       downloadUrl: `/download-file/${id}`
     });
-
-  } catch (error) {
-
-    console.log("DOWNLOAD ERROR:");
-    console.log(error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Video download failed",
-      error: error.message
-    });
-  }
+  });
 });
 
 app.get("/media/:id", (req, res) => {
@@ -125,17 +155,15 @@ app.get("/download-file/:id", (req, res) => {
     return res.status(404).send("Video not found or expired.");
   }
 
-  res.download(
-    file.path,
-    "instahub-ai-reel.mp4"
-  );
+  res.download(file.path, "instahub-ai-reel.mp4");
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log("=================================");
   console.log("InstaHub AI running on port " + PORT);
   console.log("REAL VIDEO DOWNLOADER ACTIVE");
+  console.log("YT-DLP + PYTHON + FFMPEG ACTIVE");
   console.log("=================================");
 });
