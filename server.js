@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { execFile } = require("child_process");
+const youtubedl = require("youtube-dl-exec");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/download", (req, res) => {
+app.get("/download", async (req, res) => {
   const link = req.query.link;
 
   console.log("=================================");
@@ -40,50 +40,26 @@ app.get("/download", (req, res) => {
   const id = crypto.randomUUID();
   const outputFile = path.join(DOWNLOAD_DIR, `${id}.mp4`);
 
-  const args = [
-    link,
-    "--no-playlist",
-    "--no-warnings",
-    "--format",
-    "best[ext=mp4]/best",
-    "--output",
-    outputFile,
-    "--restrict-filenames",
-    "--socket-timeout",
-    "60",
-    "--retries",
-    "3",
-    "--user-agent",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
-    "--referer",
-    "https://www.instagram.com/"
-  ];
+  console.log("STARTING BUNDLED YT-DLP...");
+  console.log("OUTPUT FILE:", outputFile);
 
-  console.log("STARTING YT-DLP...");
+  try {
+    await youtubedl(link, {
+      noPlaylist: true,
+      noWarnings: true,
+      format: "best[ext=mp4]/best",
+      output: outputFile,
+      restrictFilenames: true,
+      socketTimeout: 60,
+      retries: 3,
+      userAgent:
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0.0.0 Safari/537.36",
+      referer: "https://www.instagram.com/"
+    }, {
+      timeout: 120000
+    });
 
-  execFile("yt-dlp", args, {
-    timeout: 120000
-  }, (error, stdout, stderr) => {
-
-    console.log("YT-DLP STDOUT:");
-    console.log(stdout);
-
-    console.log("YT-DLP STDERR:");
-    console.log(stderr);
-
-    if (error) {
-      console.log("=================================");
-      console.log("YT-DLP ERROR");
-      console.log("MESSAGE:", error.message);
-      console.log("CODE:", error.code);
-      console.log("=================================");
-
-      return res.status(500).json({
-        success: false,
-        message: "Video download failed",
-        error: stderr || error.message
-      });
-    }
+    console.log("YT-DLP FINISHED SUCCESSFULLY");
 
     if (!fs.existsSync(outputFile)) {
       console.log("MP4 FILE NOT FOUND");
@@ -135,7 +111,19 @@ app.get("/download", (req, res) => {
       mediaUrl: `/media/${id}`,
       downloadUrl: `/download-file/${id}`
     });
-  });
+
+  } catch (error) {
+    console.log("=================================");
+    console.log("YT-DLP ERROR");
+    console.log("MESSAGE:", error.message);
+    console.log("=================================");
+
+    return res.status(500).json({
+      success: false,
+      message: "Video download failed",
+      error: error.stderr || error.message
+    });
+  }
 });
 
 app.get("/media/:id", (req, res) => {
@@ -164,6 +152,6 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log("=================================");
   console.log("InstaHub AI running on port " + PORT);
   console.log("REAL VIDEO DOWNLOADER ACTIVE");
-  console.log("YT-DLP + PYTHON + FFMPEG ACTIVE");
+  console.log("BUNDLED YT-DLP ACTIVE");
   console.log("=================================");
 });
