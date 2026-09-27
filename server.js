@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const DOWNLOAD_DIR = path.join(os.tmpdir(), "instahub-ai");
+const YTDLP = "/usr/local/bin/yt-dlp";
 
 if (!fs.existsSync(DOWNLOAD_DIR)) {
   fs.mkdirSync(DOWNLOAD_DIR, { recursive: true });
@@ -27,7 +28,6 @@ app.get("/", (req, res) => {
 app.get("/download", (req, res) => {
   const link = req.query.link;
 
-  console.log("=================================");
   console.log("REQUEST RECEIVED:", link);
 
   if (!link || !link.includes("instagram.com")) {
@@ -60,9 +60,9 @@ app.get("/download", (req, res) => {
   ];
 
   console.log("STARTING YT-DLP...");
-  console.log("OUTPUT FILE:", outputFile);
+  console.log("YT-DLP PATH:", YTDLP);
 
-  execFile("yt-dlp", args, {
+  execFile(YTDLP, args, {
     timeout: 120000
   }, (error, stdout, stderr) => {
 
@@ -73,11 +73,9 @@ app.get("/download", (req, res) => {
     console.log(stderr);
 
     if (error) {
-      console.log("=================================");
       console.log("YT-DLP ERROR");
       console.log("MESSAGE:", error.message);
       console.log("CODE:", error.code);
-      console.log("=================================");
 
       return res.status(500).json({
         success: false,
@@ -87,8 +85,6 @@ app.get("/download", (req, res) => {
     }
 
     if (!fs.existsSync(outputFile)) {
-      console.log("MP4 FILE NOT FOUND");
-
       return res.status(500).json({
         success: false,
         message: "Video file was not created"
@@ -112,7 +108,6 @@ app.get("/download", (req, res) => {
     });
 
     console.log("VIDEO READY:", id);
-    console.log("=================================");
 
     setTimeout(() => {
       const file = files.get(id);
@@ -164,7 +159,6 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("=================================");
   console.log("InstaHub AI running on port " + PORT);
-  console.log("REAL VIDEO DOWNLOADER ACTIVE");
-  console.log("YT-DLP ACTIVE");
+  console.log("YT-DLP PATH:", YTDLP);
   console.log("=================================");
 });
