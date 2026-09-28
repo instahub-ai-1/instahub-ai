@@ -4,157 +4,296 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>InstaHub AI - Instagram Downloader</title>
+  <title>InstaHub AI - Instagram Reel Downloader</title>
+  <meta name="description" content="Fast and simple Instagram Reel downloader. Paste a public Instagram Reel link and download the video.">
 
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+
+    :root {
+      --bg: #070708;
+      --card: rgba(18, 18, 21, 0.88);
+      --border: rgba(255,255,255,0.09);
+      --muted: #8d8d96;
+      --text: #ffffff;
+      --pink: #ff2775;
+      --orange: #ff6a00;
+      --purple: #8b45ff;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       min-height: 100vh;
+      color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(255, 0, 90, 0.18), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(120, 0, 255, 0.16), transparent 35%),
-        #080808;
-      color: white;
+        radial-gradient(circle at 10% 0%, rgba(255, 39, 117, 0.18), transparent 30%),
+        radial-gradient(circle at 90% 15%, rgba(139, 69, 255, 0.15), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(255, 106, 0, 0.08), transparent 35%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 45px 45px;
+      mask-image: linear-gradient(to bottom, black, transparent 75%);
     }
 
     .container {
-      width: min(1000px, 92%);
+      width: min(1080px, 92%);
       margin: auto;
+      position: relative;
+      z-index: 1;
     }
 
+    /* HEADER */
+
     header {
-      padding: 25px 0;
+      padding: 24px 0;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
     .logo {
-      font-size: 25px;
-      font-weight: 800;
-      letter-spacing: -1px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 22px;
+      font-weight: 850;
+      letter-spacing: -0.8px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--pink), var(--orange), var(--purple));
+      box-shadow: 0 8px 25px rgba(255,39,117,0.22);
+      font-size: 19px;
     }
 
     .logo span {
-      background: linear-gradient(90deg, #ff2d75, #ff7a00, #9b4dff);
+      background: linear-gradient(90deg, #ff397d, #ff8a00, #a05cff);
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
     }
 
     .badge {
-      font-size: 12px;
       padding: 8px 13px;
-      border: 1px solid #292929;
-      border-radius: 30px;
-      color: #bbb;
-      background: #111;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: #b9b9c2;
+      background: rgba(255,255,255,0.035);
+      font-size: 12px;
+      backdrop-filter: blur(12px);
     }
+
+    /* HERO */
 
     .hero {
       text-align: center;
-      padding: 65px 0 40px;
+      padding: 72px 0 42px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.035);
+      color: #aaaab4;
+      font-size: 12px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #35e58b;
+      box-shadow: 0 0 12px rgba(53,229,139,0.7);
     }
 
     .hero h1 {
-      font-size: clamp(38px, 7vw, 70px);
-      line-height: 1;
-      margin-bottom: 20px;
-      letter-spacing: -3px;
+      max-width: 850px;
+      margin: auto;
+      font-size: clamp(42px, 8vw, 78px);
+      line-height: 0.98;
+      letter-spacing: -4px;
+      font-weight: 850;
     }
 
     .gradient {
-      background: linear-gradient(90deg, #ff2775, #ff8a00, #9c4dff);
+      background: linear-gradient(90deg, #ff2775, #ff7900, #a04dff);
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
     }
 
     .hero p {
-      color: #999;
-      font-size: 17px;
-      margin-bottom: 35px;
+      max-width: 620px;
+      margin: 23px auto 34px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
     }
 
+    /* DOWNLOAD BOX */
+
     .download-box {
-      max-width: 720px;
+      max-width: 790px;
       margin: auto;
-      padding: 10px;
-      background: rgba(20, 20, 20, 0.9);
-      border: 1px solid #292929;
-      border-radius: 18px;
+      padding: 8px;
       display: flex;
-      gap: 10px;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      background: rgba(17,17,20,0.82);
+      box-shadow:
+        0 25px 70px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px);
+    }
+
+    .input-area {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding-left: 8px;
+    }
+
+    .link-icon {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.055);
+      color: #bdbdc6;
+      font-size: 16px;
     }
 
     .download-box input {
-      flex: 1;
+      width: 100%;
       min-width: 0;
-      background: transparent;
+      height: 48px;
       border: none;
       outline: none;
+      background: transparent;
       color: white;
-      padding: 15px;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     .download-box input::placeholder {
-      color: #666;
+      color: #64646d;
     }
 
-    .download-box button,
-    .save-btn {
-      border: none;
+    .small-btn {
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 11px;
+      background: rgba(255,255,255,0.055);
+      color: #c9c9d0;
       cursor: pointer;
-      color: white;
+      font-size: 13px;
       font-weight: 700;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #ff176f, #ff4d00);
-      transition: 0.2s;
+      white-space: nowrap;
+      transition: 0.2s ease;
     }
 
-    .download-box button {
-      padding: 0 24px;
-    }
-
-    button:hover {
+    .small-btn:hover {
+      background: rgba(255,255,255,0.10);
+      color: white;
       transform: translateY(-1px);
-      opacity: 0.92;
+    }
+
+    .download-btn {
+      height: 50px;
+      padding: 0 23px;
+      border: none;
+      border-radius: 13px;
+      color: white;
+      background: linear-gradient(135deg, #ff176f, #ff6500);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 10px 25px rgba(255,39,117,0.20);
+      transition: 0.2s ease;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(255,39,117,0.27);
     }
 
     button:disabled {
-      opacity: 0.6;
+      opacity: 0.55;
       cursor: wait;
-      transform: none;
+      transform: none !important;
+    }
+
+    .quick-hint {
+      margin-top: 13px;
+      color: #61616a;
+      font-size: 12px;
+    }
+
+    /* STATUS */
+
+    .status-area {
+      min-height: 42px;
+      max-width: 790px;
+      margin: 14px auto 0;
     }
 
     .message {
-      margin: 18px auto 0;
-      max-width: 720px;
-      color: #aaa;
-      font-size: 14px;
+      color: #aaaab3;
+      font-size: 13px;
       min-height: 20px;
     }
 
     .loading {
       display: none;
-      justify-content: center;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 9px;
+      color: #bdbdc5;
+      font-size: 13px;
     }
 
     .spinner {
-      width: 18px;
-      height: 18px;
-      border: 3px solid #333;
-      border-top-color: #ff2775;
+      width: 17px;
+      height: 17px;
+      border: 2px solid #33343a;
+      border-top-color: var(--pink);
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.75s linear infinite;
     }
 
     @keyframes spin {
@@ -163,22 +302,24 @@
       }
     }
 
+    /* RESULT */
+
     .result {
       display: none;
-      max-width: 700px;
-      margin: 35px auto;
-      background: #111;
-      border: 1px solid #292929;
-      border-radius: 20px;
-      padding: 18px;
-      overflow: hidden;
+      max-width: 760px;
+      margin: 25px auto 45px;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 22px;
+      background: rgba(16,16,19,0.90);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.38);
     }
 
     .video-wrap {
       width: 100%;
-      background: #000;
-      border-radius: 15px;
       overflow: hidden;
+      border-radius: 16px;
+      background: #000;
     }
 
     video {
@@ -190,76 +331,237 @@
     }
 
     .result-info {
-      padding: 18px 5px 5px;
+      padding: 17px 7px 6px;
+    }
+
+    .result-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 13px;
     }
 
     .result-info h3 {
-      font-size: 17px;
-      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: 750;
+    }
+
+    .ready-badge {
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(53,229,139,0.09);
+      border: 1px solid rgba(53,229,139,0.16);
+      color: #65e8a1;
+      font-size: 11px;
+      white-space: nowrap;
     }
 
     .save-btn {
       width: 100%;
       padding: 15px;
-      font-size: 15px;
+      border: none;
+      border-radius: 13px;
+      color: white;
+      background: linear-gradient(135deg, #ff176f, #ff6500);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .save-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .next-btn {
+      width: 100%;
+      margin-top: 9px;
+      padding: 13px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 13px;
+      color: #c8c8d0;
+      background: rgba(255,255,255,0.035);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .next-btn:hover {
+      background: rgba(255,255,255,0.07);
+      color: white;
+    }
+
+    /* FEATURES */
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+      font-size: 24px;
+      letter-spacing: -0.8px;
+    }
+
+    .section-heading p {
+      margin-top: 7px;
+      color: #696972;
+      font-size: 13px;
     }
 
     .features {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin: 45px 0 60px;
+      gap: 13px;
+      margin: 25px 0 60px;
     }
 
     .feature {
-      background: #101010;
-      border: 1px solid #242424;
-      border-radius: 16px;
-      padding: 24px;
+      padding: 23px;
+      border: 1px solid rgba(255,255,255,0.075);
+      border-radius: 18px;
+      background: rgba(16,16,18,0.72);
+      transition: 0.2s ease;
+    }
+
+    .feature:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.13);
     }
 
     .feature-icon {
-      font-size: 25px;
-      margin-bottom: 12px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.055);
+      font-size: 19px;
     }
 
     .feature h3 {
       margin-bottom: 8px;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     .feature p {
-      color: #777;
-      font-size: 13px;
-      line-height: 1.5;
+      color: #777780;
+      font-size: 12px;
+      line-height: 1.6;
     }
+
+    /* FOOTER */
 
     footer {
+      padding: 25px 0 38px;
       text-align: center;
-      color: #555;
-      padding: 25px 0 35px;
-      font-size: 13px;
+      color: #4f4f57;
+      font-size: 12px;
     }
 
-    @media (max-width: 650px) {
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+      .container {
+        width: min(94%, 520px);
+      }
+
+      header {
+        padding: 18px 0;
+      }
+
+      .logo {
+        font-size: 19px;
+      }
+
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+      }
+
+      .badge {
+        padding: 7px 10px;
+        font-size: 10px;
+      }
+
       .hero {
-        padding-top: 45px;
+        padding: 54px 0 28px;
+      }
+
+      .hero h1 {
+        font-size: clamp(40px, 12vw, 60px);
+        letter-spacing: -3px;
+      }
+
+      .hero p {
+        font-size: 14px;
+        margin-top: 18px;
+        margin-bottom: 27px;
       }
 
       .download-box {
-        flex-direction: column;
+        padding: 8px;
+        flex-wrap: wrap;
       }
 
-      .download-box button {
-        height: 52px;
+      .input-area {
+        width: 100%;
+        flex: 1 0 100%;
+        padding: 0 4px;
+      }
+
+      .download-box input {
+        height: 45px;
+      }
+
+      .small-btn {
+        flex: 1;
+      }
+
+      .download-btn {
+        flex: 1.4;
       }
 
       .features {
         grid-template-columns: 1fr;
+        margin-bottom: 40px;
       }
 
+      .feature {
+        padding: 20px;
+      }
+
+      .result {
+        margin-top: 20px;
+        border-radius: 18px;
+      }
+
+      .result-title-row {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 390px) {
+
       .hero h1 {
-        letter-spacing: -2px;
+        font-size: 39px;
+      }
+
+      .logo {
+        font-size: 17px;
+      }
+
+      .badge {
+        display: none;
+      }
+
+      .download-btn,
+      .small-btn {
+        font-size: 12px;
       }
     }
   </style>
@@ -269,98 +571,244 @@
 
   <div class="container">
 
+    <!-- HEADER -->
+
     <header>
-      <div class="logo">⚡ <span>InstaHub AI</span></div>
-      <div class="badge">Instagram Tools</div>
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <span>InstaHub AI</span>
+      </div>
+
+      <div class="badge">
+        Instagram Tools
+      </div>
     </header>
+
+
+    <!-- HERO -->
 
     <section class="hero">
 
+      <div class="eyebrow">
+        <span class="live-dot"></span>
+        Fast Instagram Downloader
+      </div>
+
       <h1>
-        Download <span class="gradient">Reels</span><br>
+        Download
+        <span class="gradient">Reels</span>
+        <br>
         in seconds.
       </h1>
 
       <p>
-        Paste a public Instagram Reel link and download the video.
+        Paste a public Instagram Reel link and download your video
+        quickly with a clean and simple experience.
       </p>
+
+
+      <!-- INPUT -->
 
       <div class="download-box">
 
-        <input
-          id="urlInput"
-          type="text"
-          placeholder="Paste Instagram Reel URL here..."
-          autocomplete="off"
-        >
+        <div class="input-area">
 
-        <button id="downloadBtn">
+          <div class="link-icon">
+            🔗
+          </div>
+
+          <input
+            id="urlInput"
+            type="text"
+            placeholder="Paste Instagram Reel URL here..."
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+          >
+
+        </div>
+
+
+        <button
+          class="small-btn"
+          id="pasteBtn"
+          type="button">
+          📋 Paste
+        </button>
+
+
+        <button
+          class="small-btn"
+          id="clearBtn"
+          type="button">
+          ✕ Clear
+        </button>
+
+
+        <button
+          class="download-btn"
+          id="downloadBtn"
+          type="button">
           Download
         </button>
 
       </div>
 
-      <div class="message" id="message"></div>
 
-      <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <span>Processing Reel...</span>
+      <div class="quick-hint">
+        Tip: Copy a Reel link → tap Paste → Download
+      </div>
+
+
+      <!-- STATUS -->
+
+      <div class="status-area">
+
+        <div
+          class="message"
+          id="message">
+        </div>
+
+        <div
+          class="loading"
+          id="loading">
+
+          <div class="spinner"></div>
+
+          <span>
+            Processing Reel...
+          </span>
+
+        </div>
+
       </div>
 
     </section>
 
-    <section class="result" id="result">
+
+    <!-- RESULT -->
+
+    <section
+      class="result"
+      id="result">
 
       <div class="video-wrap">
+
         <video
           id="video"
           controls
           playsinline
           preload="metadata">
         </video>
+
       </div>
+
 
       <div class="result-info">
 
-        <h3 id="title">
-          Instagram Reel
-        </h3>
+        <div class="result-title-row">
 
-        <button class="save-btn" id="saveBtn">
+          <h3 id="title">
+            Instagram Reel
+          </h3>
+
+          <div class="ready-badge">
+            ✓ Ready
+          </div>
+
+        </div>
+
+
+        <button
+          class="save-btn"
+          id="saveBtn"
+          type="button">
           ⬇ Download Video
+        </button>
+
+
+        <button
+          class="next-btn"
+          id="nextBtn"
+          type="button">
+          ＋ Download Another Reel
         </button>
 
       </div>
 
     </section>
 
+
+    <!-- FEATURES -->
+
+    <div class="section-heading">
+
+      <h2>
+        Simple. Fast. Clean.
+      </h2>
+
+      <p>
+        Everything you need for downloading public Instagram Reels.
+      </p>
+
+    </div>
+
+
     <section class="features">
 
       <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <h3>Fast Processing</h3>
+
+        <div class="feature-icon">
+          ⚡
+        </div>
+
+        <h3>
+          Fast Processing
+        </h3>
+
         <p>
-          Your public Instagram video is processed directly by the server.
+          Paste your public Instagram Reel link and start processing
+          without unnecessary steps.
         </p>
+
       </div>
 
-      <div class="feature">
-        <div class="feature-icon">🎬</div>
-        <h3>Video Preview</h3>
-        <p>
-          Watch the processed video before saving it to your device.
-        </p>
-      </div>
 
       <div class="feature">
-        <div class="feature-icon">🔒</div>
-        <h3>Simple & Clean</h3>
+
+        <div class="feature-icon">
+          🎬
+        </div>
+
+        <h3>
+          Video Preview
+        </h3>
+
         <p>
-          No unnecessary steps. Paste the link and process the Reel.
+          Preview the processed Reel before saving the video to your device.
         </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <div class="feature-icon">
+          🔒
+        </div>
+
+        <h3>
+          Simple & Clean
+        </h3>
+
+        <p>
+          A focused interface designed to make the download process easy.
+        </p>
+
       </div>
 
     </section>
+
 
     <footer>
       © 2026 InstaHub AI
@@ -372,8 +820,13 @@
   <script>
 
     const urlInput = document.getElementById("urlInput");
+
+    const pasteBtn = document.getElementById("pasteBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
     const downloadBtn = document.getElementById("downloadBtn");
     const saveBtn = document.getElementById("saveBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
     const loading = document.getElementById("loading");
     const message = document.getElementById("message");
@@ -384,38 +837,161 @@
 
     let currentDownloadUrl = "";
 
+
+    /* =========================
+       DOWNLOAD BUTTON
+    ========================= */
+
     downloadBtn.addEventListener("click", processVideo);
 
+
+    /* =========================
+       ENTER KEY
+    ========================= */
+
     urlInput.addEventListener("keydown", function(event) {
+
       if (event.key === "Enter") {
         processVideo();
       }
+
     });
 
+
+    /* =========================
+       PASTE BUTTON
+    ========================= */
+
+    pasteBtn.addEventListener("click", async function() {
+
+      try {
+
+        const text = await navigator.clipboard.readText();
+
+        if (!text) {
+
+          message.textContent =
+            "Clipboard is empty. Copy an Instagram link first.";
+
+          return;
+
+        }
+
+        urlInput.value = text.trim();
+
+        message.textContent =
+          "Instagram link pasted ✓";
+
+        urlInput.focus();
+
+      } catch (error) {
+
+        message.textContent =
+          "Paste permission blocked. Long-press the box and paste.";
+
+        urlInput.focus();
+
+      }
+
+    });
+
+
+    /* =========================
+       CLEAR BUTTON
+    ========================= */
+
+    clearBtn.addEventListener("click", clearAll);
+
+
+    function clearAll() {
+
+      urlInput.value = "";
+
+      currentDownloadUrl = "";
+
+      message.textContent = "";
+
+      video.pause();
+
+      video.removeAttribute("src");
+
+      video.load();
+
+      result.style.display = "none";
+
+      loading.style.display = "none";
+
+      downloadBtn.disabled = false;
+
+      urlInput.focus();
+
+    }
+
+
+    /* =========================
+       PROCESS VIDEO
+    ========================= */
 
     async function processVideo() {
 
       const link = urlInput.value.trim();
 
+
+      /* Reset previous result */
+
       result.style.display = "none";
+
+      video.pause();
+
       video.removeAttribute("src");
+
       video.load();
 
-      message.textContent = "";
       currentDownloadUrl = "";
 
+      message.textContent = "";
+
+
+      /* Empty check */
+
       if (!link) {
-        message.textContent = "Please paste an Instagram URL.";
+
+        message.textContent =
+          "Please paste an Instagram Reel URL.";
+
+        urlInput.focus();
+
         return;
+
       }
+
+
+      /* Instagram URL check */
 
       if (!link.includes("instagram.com")) {
-        message.textContent = "Please enter a valid Instagram URL.";
+
+        message.textContent =
+          "Please enter a valid Instagram URL.";
+
+        urlInput.focus();
+
         return;
+
       }
 
+
+      /* Loading state */
+
       downloadBtn.disabled = true;
+
+      pasteBtn.disabled = true;
+
+      clearBtn.disabled = true;
+
       loading.style.display = "flex";
+
+      message.textContent = "";
+
 
       try {
 
@@ -423,83 +999,96 @@
           `/download?link=${encodeURIComponent(link)}`
         );
 
+
         const data = await response.json();
 
+
         if (!response.ok || !data.success) {
+
           throw new Error(
-            data.message || "Unable to process this video."
+            data.message ||
+            "Unable to process this video."
           );
+
         }
 
+
         /*
-          IMPORTANT:
+          Server response:
           mediaUrl = video preview
           downloadUrl = actual file download
         */
 
         if (!data.mediaUrl || !data.downloadUrl) {
-          throw new Error("Server did not return video URLs.");
+
+          throw new Error(
+            "Server did not return video URLs."
+          );
+
         }
 
-        currentDownloadUrl = data.downloadUrl;
 
-        title.textContent = data.title || "Instagram Reel";
+        currentDownloadUrl =
+          data.downloadUrl;
 
-        video.src = data.mediaUrl;
 
-        result.style.display = "block";
+        title.textContent =
+          data.title ||
+          "Instagram Reel";
+
+
+        video.src =
+          data.mediaUrl;
+
+
+        result.style.display =
+          "block";
+
 
         video.load();
 
-        message.textContent = "Video ready ✓";
+
+        message.textContent =
+          "Video ready ✓";
+
 
         result.scrollIntoView({
           behavior: "smooth",
           block: "center"
         });
 
+
       } catch (error) {
 
         console.error(error);
+
 
         message.textContent =
           error.message ||
           "Something went wrong. Please try again.";
 
+
       } finally {
 
         downloadBtn.disabled = false;
+
+        pasteBtn.disabled = false;
+
+        clearBtn.disabled = false;
+
         loading.style.display = "none";
 
       }
+
     }
 
+
+    /* =========================
+       SAVE VIDEO
+    ========================= */
 
     saveBtn.addEventListener("click", function() {
 
       if (!currentDownloadUrl) {
-        message.textContent = "Video is not ready yet.";
-        return;
-      }
 
-      /*
-        Open actual MP4 download endpoint.
-      */
-
-      const link = document.createElement("a");
-
-      link.href = currentDownloadUrl;
-      link.download = "instahub-ai-reel.mp4";
-
-      document.body.appendChild(link);
-
-      link.click();
-
-      document.body.removeChild(link);
-
-    });
-
-  </script>
-
-</body>
-</html>
+        message.textContent =
