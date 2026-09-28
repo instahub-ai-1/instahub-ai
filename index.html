@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>InstaHub AI - Instagram Reel Downloader</title>
 
   <meta
     name="description"
-    content="InstaHub AI - Fast Instagram Reel Downloader"
-  >
+    content="Download Instagram Reels quickly with InstaHub AI."
+  />
 
   <style>
     * {
@@ -18,54 +18,16 @@
       padding: 0;
     }
 
-    :root {
-      --bg: #050507;
-      --card: rgba(18, 18, 25, 0.82);
-      --card2: rgba(24, 24, 34, 0.9);
-      --border: rgba(255,255,255,0.09);
-      --text: #ffffff;
-      --muted: #9494a3;
-      --pink: #ff2d7d;
-      --purple: #9147ff;
-      --orange: #ff6b18;
-      --green: #35e58b;
-      --red: #ff4d67;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
+      font-family: Arial, Helvetica, sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
-      color: var(--text);
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-
+      color: #fff;
       background:
-        radial-gradient(
-          circle at 15% 5%,
-          rgba(255,45,125,0.20),
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 85% 10%,
-          rgba(145,71,255,0.20),
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 50% 80%,
-          rgba(255,107,24,0.08),
-          transparent 35%
-        ),
-        #050507;
+        radial-gradient(circle at 15% 10%, rgba(255, 0, 128, 0.22), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(255, 120, 0, 0.18), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(100, 0, 255, 0.20), transparent 35%),
+        #08080d;
+      overflow-x: hidden;
     }
 
     body::before {
@@ -73,381 +35,282 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: 0.35;
-
-      background-image:
-        linear-gradient(
-          rgba(255,255,255,0.018) 1px,
-          transparent 1px
-        ),
-        linear-gradient(
-          90deg,
-          rgba(255,255,255,0.018) 1px,
-          transparent 1px
-        );
-
-      background-size: 42px 42px;
-      mask-image: linear-gradient(
-        to bottom,
-        black,
-        transparent 85%
-      );
+      background:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 35px 35px;
+      z-index: -1;
     }
 
     .container {
-      position: relative;
-      z-index: 2;
-      width: min(1080px, 92%);
+      width: min(1100px, 92%);
       margin: auto;
     }
 
     /* HEADER */
 
     header {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(8,8,13,0.55);
+      backdrop-filter: blur(15px);
+    }
+
+    .nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 24px 0;
+      gap: 20px;
     }
 
     .logo {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 21px;
-      font-weight: 850;
-      letter-spacing: -0.7px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
     .logo-icon {
       width: 40px;
       height: 40px;
-      display: grid;
-      place-items: center;
-
-      border-radius: 13px;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--pink),
-          var(--orange),
-          var(--purple)
-        );
-
-      box-shadow:
-        0 8px 30px rgba(255,45,125,0.25);
-
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 20px;
+      background: linear-gradient(135deg, #ff006e, #ff7a00, #8338ec);
+      box-shadow: 0 8px 30px rgba(255,0,110,0.25);
     }
 
-    .logo-name {
-      background:
-        linear-gradient(
-          90deg,
-          #ff3d83,
-          #ff8a18,
-          #a66aff
-        );
-
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .top-badge {
+    .badge {
       padding: 8px 13px;
-
-      border: 1px solid var(--border);
       border-radius: 999px;
-
-      background: rgba(255,255,255,0.035);
-
-      color: #bdbdc8;
-      font-size: 11px;
-
-      backdrop-filter: blur(15px);
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffb3d2;
+      border: 1px solid rgba(255,105,180,0.22);
+      background: rgba(255,0,110,0.08);
     }
 
     /* HERO */
 
     .hero {
       text-align: center;
-      padding: 65px 0 35px;
+      padding: 80px 0 45px;
     }
 
-    .status-pill {
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-
-      padding: 8px 13px;
+      padding: 9px 15px;
       margin-bottom: 20px;
-
-      border: 1px solid rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 999px;
-
-      background: rgba(255,255,255,0.035);
-
-      color: #b5b5c0;
-      font-size: 12px;
-
-      backdrop-filter: blur(15px);
+      background: rgba(255,255,255,0.045);
+      color: #dcdce5;
+      font-size: 13px;
     }
 
-    .status-dot {
-      width: 7px;
-      height: 7px;
-
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #35e889;
       border-radius: 50%;
-
-      background: var(--green);
-
-      box-shadow:
-        0 0 12px rgba(53,229,139,0.75);
+      box-shadow: 0 0 12px #35e889;
     }
 
-    .hero h1 {
-      max-width: 900px;
+    h1 {
+      max-width: 850px;
       margin: auto;
-
-      font-size: clamp(44px, 8vw, 82px);
+      font-size: clamp(42px, 7vw, 78px);
       line-height: 0.98;
       letter-spacing: -4px;
       font-weight: 900;
     }
 
-    .gradient-text {
-      background:
-        linear-gradient(
-          90deg,
-          #ff287a,
-          #ff761c,
-          #9a4cff
-        );
-
+    h1 span {
+      background: linear-gradient(
+        90deg,
+        #ff4d9a,
+        #ff7a00,
+        #9b5cff
+      );
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
 
-    .hero-description {
-      max-width: 620px;
-
-      margin: 22px auto 32px;
-
-      color: var(--muted);
-
-      font-size: 15px;
+    .hero-text {
+      max-width: 650px;
+      margin: 24px auto 0;
+      color: #a9a9b7;
+      font-size: 17px;
       line-height: 1.7;
     }
 
-    /* DOWNLOAD BOX */
+    /* DOWNLOAD CARD */
 
     .download-card {
-      max-width: 820px;
-      margin: auto;
-
-      padding: 9px;
-
+      max-width: 850px;
+      margin: 25px auto 0;
+      padding: 18px;
       border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 21px;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(28,28,38,0.9),
-          rgba(12,12,17,0.92)
-        );
-
+      border-radius: 24px;
+      background: rgba(20,20,29,0.72);
       box-shadow:
-        0 30px 90px rgba(0,0,0,0.50),
-        inset 0 1px 0 rgba(255,255,255,0.05);
-
-      backdrop-filter: blur(25px);
+        0 30px 80px rgba(0,0,0,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px);
     }
 
     .input-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      gap: 10px;
+      align-items: stretch;
     }
 
     .input-wrap {
-      min-width: 0;
       flex: 1;
-
       display: flex;
       align-items: center;
-      gap: 10px;
+      min-width: 0;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 15px;
+      background: rgba(0,0,0,0.28);
+      transition: 0.2s ease;
+    }
 
-      padding-left: 10px;
+    .input-wrap:focus-within {
+      border-color: rgba(255,70,150,0.65);
+      box-shadow: 0 0 0 4px rgba(255,0,110,0.07);
     }
 
     .input-icon {
-      width: 38px;
-      height: 38px;
-      flex: 0 0 38px;
-
-      display: grid;
-      place-items: center;
-
-      border-radius: 11px;
-
-      background: rgba(255,255,255,0.055);
-
-      color: #bdbdc8;
-      font-size: 16px;
+      padding-left: 15px;
+      font-size: 18px;
+      opacity: 0.8;
     }
 
     #urlInput {
       width: 100%;
       min-width: 0;
-      height: 50px;
-
+      padding: 17px 14px;
+      color: #fff;
       border: none;
       outline: none;
-
       background: transparent;
-
-      color: white;
-
-      font-size: 14px;
+      font-size: 15px;
     }
 
     #urlInput::placeholder {
-      color: #656572;
+      color: #707080;
     }
 
-    .small-button,
-    .main-button {
+    button {
       border: none;
+      outline: none;
       cursor: pointer;
-
-      transition:
-        transform 0.2s ease,
-        opacity 0.2s ease,
-        background 0.2s ease;
-    }
-
-    .small-button {
-      height: 46px;
-      padding: 0 15px;
-
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-
-      background: rgba(255,255,255,0.055);
-
-      color: #d0d0d8;
-
-      font-size: 12px;
-      font-weight: 750;
-
-      white-space: nowrap;
-    }
-
-    .small-button:hover {
-      background: rgba(255,255,255,0.10);
-      color: white;
-      transform: translateY(-1px);
-    }
-
-    .main-button {
-      height: 50px;
-      padding: 0 25px;
-
-      border-radius: 13px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ff2678,
-          #ff6819
-        );
-
-      color: white;
-
-      font-size: 13px;
-      font-weight: 850;
-
-      box-shadow:
-        0 10px 30px rgba(255,45,125,0.25);
-    }
-
-    .main-button:hover {
-      transform: translateY(-1px);
-
-      box-shadow:
-        0 14px 35px rgba(255,45,125,0.32);
+      font-family: inherit;
+      transition: 0.2s ease;
     }
 
     button:disabled {
       opacity: 0.55;
-      cursor: wait;
-      transform: none !important;
+      cursor: not-allowed;
     }
 
-    .hint {
-      margin-top: 13px;
+    .small-button {
+      padding: 0 16px;
+      min-width: 82px;
+      border-radius: 13px;
+      color: #dddde7;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      font-weight: 700;
+    }
 
-      color: #666672;
+    .small-button:hover:not(:disabled) {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-1px);
+    }
 
-      font-size: 11px;
+    .main-button {
+      min-width: 145px;
+      padding: 0 24px;
+      border-radius: 15px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      background: linear-gradient(
+        135deg,
+        #ff006e,
+        #ff4d4d,
+        #ff8a00
+      );
+      box-shadow: 0 12px 30px rgba(255,0,110,0.22);
+    }
+
+    .main-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 35px rgba(255,0,110,0.30);
+    }
+
+    .helper-text {
+      margin-top: 12px;
+      text-align: left;
+      padding-left: 4px;
+      color: #727281;
+      font-size: 12px;
     }
 
     /* STATUS */
 
     .status-box {
-      max-width: 820px;
-      min-height: 48px;
-
+      max-width: 850px;
       margin: 15px auto 0;
-      padding: 0 4px;
     }
 
     .message {
-      min-height: 22px;
-
-      color: #aaaab7;
-
-      font-size: 13px;
+      min-height: 20px;
+      padding: 5px 4px;
+      font-size: 14px;
       line-height: 1.5;
     }
 
     .message.success {
-      color: #5ce99e;
+      color: #55e69b;
     }
 
     .message.error {
-      color: #ff6c7f;
+      color: #ff6e83;
     }
 
     .loading {
       display: none;
-
       align-items: center;
       justify-content: center;
-      gap: 10px;
-
-      padding: 10px;
-
-      color: #c3c3ce;
-
-      font-size: 13px;
+      gap: 11px;
+      padding: 14px;
+      margin-top: 8px;
+      border-radius: 13px;
+      color: #cfcfd9;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      font-size: 14px;
     }
 
     .spinner {
-      width: 18px;
-      height: 18px;
-
-      border: 2px solid rgba(255,255,255,0.13);
-      border-top-color: var(--pink);
-
+      width: 19px;
+      height: 19px;
+      border: 2px solid rgba(255,255,255,0.15);
+      border-top-color: #ff4d9a;
+      border-right-color: #ff7a00;
       border-radius: 50%;
-
-      animation:
-        spin 0.75s linear infinite;
+      animation: spin 0.8s linear infinite;
     }
 
     @keyframes spin {
@@ -460,319 +323,226 @@
 
     .result {
       display: none;
-
-      max-width: 790px;
-
-      margin: 20px auto 55px;
-      padding: 10px;
-
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 23px;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(23,23,31,0.95),
-          rgba(10,10,14,0.95)
-        );
-
-      box-shadow:
-        0 30px 90px rgba(0,0,0,0.45);
-    }
-
-    .video-container {
-      overflow: hidden;
-
-      border-radius: 17px;
-
-      background: #000;
-    }
-
-    video {
-      display: block;
-
-      width: 100%;
-      max-height: 680px;
-
-      background: #000;
-
-      object-fit: contain;
-    }
-
-    .result-content {
-      padding: 17px 7px 6px;
+      max-width: 850px;
+      margin: 25px auto 0;
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(18,18,27,0.82);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.30);
     }
 
     .result-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 10px;
-
-      margin-bottom: 13px;
+      margin-bottom: 15px;
+      text-align: left;
     }
 
-    .result-header h3 {
-      font-size: 16px;
+    .result-label {
+      color: #8e8e9e;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    #title {
+      color: #fff;
+      font-size: 18px;
       font-weight: 800;
     }
 
-    .ready {
-      padding: 6px 9px;
+    .video-box {
+      overflow: hidden;
+      border-radius: 17px;
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
 
-      border: 1px solid rgba(53,229,139,0.16);
-      border-radius: 999px;
+    #video {
+      display: block;
+      width: 100%;
+      max-height: 650px;
+      background: #000;
+    }
 
-      background: rgba(53,229,139,0.08);
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
 
-      color: #5ce99e;
-
-      font-size: 10px;
-      font-weight: 700;
+    .save-button,
+    .next-button {
+      flex: 1;
+      min-height: 50px;
+      border-radius: 13px;
+      font-weight: 800;
+      font-size: 14px;
     }
 
     .save-button {
-      width: 100%;
+      color: #fff;
+      background: linear-gradient(135deg, #ff006e, #8338ec);
+      box-shadow: 0 10px 25px rgba(131,56,236,0.20);
+    }
 
-      padding: 15px;
-
-      border: none;
-      border-radius: 13px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #ff2678,
-          #ff6819
-        );
-
-      color: white;
-
-      font-size: 14px;
-      font-weight: 850;
-
-      cursor: pointer;
-
-      box-shadow:
-        0 10px 30px rgba(255,45,125,0.20);
+    .save-button:hover {
+      transform: translateY(-2px);
     }
 
     .next-button {
-      width: 100%;
-
-      margin-top: 9px;
-      padding: 13px;
-
+      color: #dddde7;
+      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 13px;
-
-      background: rgba(255,255,255,0.035);
-
-      color: #c8c8d1;
-
-      font-size: 13px;
-      font-weight: 750;
-
-      cursor: pointer;
     }
 
     .next-button:hover {
-      background: rgba(255,255,255,0.07);
-      color: white;
+      background: rgba(255,255,255,0.10);
     }
 
     /* FEATURES */
 
-    .section-title {
-      text-align: center;
-      margin-bottom: 22px;
-    }
-
-    .section-title h2 {
-      font-size: 25px;
-      letter-spacing: -0.8px;
-    }
-
-    .section-title p {
-      margin-top: 7px;
-
-      color: #6d6d78;
-
-      font-size: 12px;
-    }
-
     .features {
       display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-      gap: 14px;
-
-      margin-bottom: 60px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 55px auto 80px;
+      max-width: 950px;
     }
 
     .feature {
       padding: 23px;
-
-      border: 1px solid rgba(255,255,255,0.07);
+      text-align: left;
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(20,20,28,0.85),
-          rgba(12,12,17,0.80)
-        );
-
-      transition:
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .feature:hover {
-      transform: translateY(-3px);
-
-      border-color:
-        rgba(255,255,255,0.13);
+      background: rgba(255,255,255,0.035);
     }
 
     .feature-icon {
-      width: 42px;
-      height: 42px;
-
-      display: grid;
-      place-items: center;
-
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 15px;
-
-      border-radius: 13px;
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255,45,125,0.12),
-          rgba(145,71,255,0.12)
-        );
-
-      font-size: 19px;
+      border-radius: 12px;
+      background: rgba(255,0,110,0.10);
+      font-size: 18px;
     }
 
     .feature h3 {
-      margin-bottom: 8px;
-
+      margin-bottom: 7px;
       font-size: 15px;
     }
 
     .feature p {
-      color: #777783;
-
-      font-size: 12px;
-      line-height: 1.65;
+      color: #858592;
+      font-size: 13px;
+      line-height: 1.6;
     }
 
+    /* FOOTER */
+
     footer {
-      padding: 25px 0 40px;
-
+      padding: 25px 0 35px;
       text-align: center;
-
-      color: #50505b;
-
-      font-size: 11px;
+      color: #62626e;
+      font-size: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
 
     /* MOBILE */
 
-    @media (max-width: 720px) {
-
-      .container {
-        width: 94%;
-      }
-
+    @media (max-width: 760px) {
       header {
         padding: 18px 0;
       }
 
-      .logo {
-        font-size: 18px;
-      }
-
-      .logo-icon {
-        width: 35px;
-        height: 35px;
-        border-radius: 11px;
-      }
-
-      .top-badge {
-        padding: 7px 9px;
-        font-size: 9px;
+      .badge {
+        display: none;
       }
 
       .hero {
-        padding: 50px 0 28px;
+        padding: 55px 0 30px;
       }
 
-      .hero h1 {
-        font-size: clamp(42px, 12vw, 60px);
-        letter-spacing: -3px;
+      h1 {
+        font-size: clamp(40px, 13vw, 60px);
+        letter-spacing: -2.5px;
       }
 
-      .hero-description {
-        font-size: 13px;
-        margin-top: 18px;
-        margin-bottom: 25px;
+      .hero-text {
+        font-size: 15px;
       }
 
       .download-card {
-        padding: 8px;
+        padding: 12px;
+        border-radius: 18px;
       }
 
       .input-row {
-        flex-wrap: wrap;
+        flex-direction: column;
       }
 
       .input-wrap {
         width: 100%;
-        flex: 1 0 100%;
-      }
-
-      #urlInput {
-        height: 45px;
-      }
-
-      .small-button {
-        flex: 1;
-      }
-
-      .main-button {
-        flex: 1.35;
-      }
-
-      .features {
-        grid-template-columns: 1fr;
-      }
-
-      .result {
-        border-radius: 19px;
-      }
-    }
-
-    @media (max-width: 390px) {
-
-      .top-badge {
-        display: none;
-      }
-
-      .hero h1 {
-        font-size: 40px;
       }
 
       .small-button,
       .main-button {
+        min-height: 50px;
+      }
+
+      .small-button {
+        padding: 0 15px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+        margin-top: 35px;
+        margin-bottom: 55px;
+      }
+
+      .result-actions {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .logo {
+        font-size: 19px;
+      }
+
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .hero {
+        padding-top: 45px;
+      }
+
+      h1 {
+        font-size: 41px;
+      }
+
+      .hero-text {
+        font-size: 14px;
+      }
+
+      .input-wrap {
+        flex-wrap: wrap;
+      }
+
+      .input-icon {
+        padding-left: 13px;
+      }
+
+      #urlInput {
         padding-left: 9px;
-        padding-right: 9px;
-        font-size: 11px;
+      }
+
+      .small-button {
+        flex: 1;
+        margin: 0 5px 8px;
       }
     }
   </style>
@@ -780,205 +550,177 @@
 
 <body>
 
-  <div class="container">
+  <!-- HEADER -->
 
-    <!-- HEADER -->
-
-    <header>
+  <header>
+    <div class="container nav">
 
       <div class="logo">
-
-        <div class="logo-icon">
-          ⚡
-        </div>
-
-        <div class="logo-name">
-          InstaHub AI
-        </div>
-
+        <div class="logo-icon">✦</div>
+        <span>InstaHub AI</span>
       </div>
 
-      <div class="top-badge">
+      <div class="badge">
         Instagram Tools
       </div>
 
-    </header>
+    </div>
+  </header>
 
 
-    <!-- HERO -->
+  <!-- HERO -->
+
+  <main>
 
     <section class="hero">
 
-      <div class="status-pill">
+      <div class="container">
 
-        <span class="status-dot"></span>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Fast Instagram Downloader
+        </div>
 
-        Fast Instagram Downloader
+        <h1>
+          Download Reels
+          <br />
+          <span>in seconds.</span>
+        </h1>
 
-      </div>
-
-
-      <h1>
-
-        Download
-
-        <span class="gradient-text">
-          Reels
-        </span>
-
-        <br>
-
-        in seconds.
-
-      </h1>
+        <p class="hero-text">
+          Paste your Instagram Reel link below and download your video
+          quickly with InstaHub AI.
+        </p>
 
 
-      <p class="hero-description">
+        <!-- DOWNLOAD CARD -->
 
-        Paste a public Instagram Reel link and download your
-        video with a fast, simple and clean experience.
+        <div class="download-card">
 
-      </p>
+          <div class="input-row">
 
+            <div class="input-wrap">
 
-      <!-- DOWNLOAD CARD -->
+              <div class="input-icon">
+                🔗
+              </div>
 
-      <div class="download-card">
+              <input
+                id="urlInput"
+                type="url"
+                autocomplete="off"
+                placeholder="Paste Instagram Reel URL here..."
+              />
 
-        <div class="input-row">
-
-          <div class="input-wrap">
-
-            <div class="input-icon">
-              🔗
             </div>
 
-            <input
-              id="urlInput"
-              type="text"
-              placeholder="Paste Instagram Reel URL here..."
-              autocomplete="off"
-              autocapitalize="off"
-              spellcheck="false"
+            <button
+              id="pasteBtn"
+              class="small-button"
+              type="button"
             >
+              📋 Paste
+            </button>
+
+            <button
+              id="clearBtn"
+              class="small-button"
+              type="button"
+            >
+              ✕ Clear
+            </button>
+
+            <button
+              id="downloadBtn"
+              class="main-button"
+              type="button"
+            >
+              Download
+            </button>
 
           </div>
 
-
-          <button
-            class="small-button"
-            id="pasteBtn"
-            type="button"
-          >
-            📋 Paste
-          </button>
-
-
-          <button
-            class="small-button"
-            id="clearBtn"
-            type="button"
-          >
-            ✕ Clear
-          </button>
-
-
-          <button
-            class="main-button"
-            id="downloadBtn"
-            type="button"
-          >
-            Download
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="hint">
-        Copy Reel link → Paste → Download
-      </div>
-
-
-      <!-- STATUS -->
-
-      <div class="status-box">
-
-        <div
-          class="loading"
-          id="loading"
-        >
-
-          <div class="spinner"></div>
-
-          <span id="loadingText">
-            Connecting to InstaHub AI...
-          </span>
-
-        </div>
-
-
-        <div
-          class="message"
-          id="message"
-        ></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- RESULT -->
-
-    <section
-      class="result"
-      id="result"
-    >
-
-      <div class="video-container">
-
-        <video
-          id="video"
-          controls
-          playsinline
-          preload="metadata"
-        ></video>
-
-      </div>
-
-
-      <div class="result-content">
-
-        <div class="result-header">
-
-          <h3 id="title">
-            Instagram Reel
-          </h3>
-
-          <div class="ready">
-            ✓ READY
+          <div class="helper-text">
+            Example: https://www.instagram.com/reel/...
           </div>
 
         </div>
 
 
-        <button
-          class="save-button"
-          id="saveBtn"
-          type="button"
-        >
-          ⬇ Download Video
-        </button>
+        <!-- STATUS -->
+
+        <div class="status-box">
+
+          <div
+            id="loading"
+            class="loading"
+          >
+            <div class="spinner"></div>
+
+            <span id="loadingText">
+              Processing Reel...
+            </span>
+          </div>
+
+          <div
+            id="message"
+            class="message"
+          ></div>
+
+        </div>
 
 
-        <button
-          class="next-button"
-          id="nextBtn"
-          type="button"
+        <!-- RESULT -->
+
+        <div
+          id="result"
+          class="result"
         >
-          ＋ Download Another Reel
-        </button>
+
+          <div class="result-header">
+
+            <div class="result-label">
+              VIDEO READY
+            </div>
+
+            <div id="title">
+              Instagram Reel
+            </div>
+
+          </div>
+
+          <div class="video-box">
+
+            <video
+              id="video"
+              controls
+              playsinline
+              preload="metadata"
+            ></video>
+
+          </div>
+
+          <div class="result-actions">
+
+            <button
+              id="saveBtn"
+              class="save-button"
+              type="button"
+            >
+              ⬇ Download Video
+            </button>
+
+            <button
+              id="nextBtn"
+              class="next-button"
+              type="button"
+            >
+              ↻ Download Another Reel
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 
@@ -987,20 +729,7 @@
 
     <!-- FEATURES -->
 
-    <div class="section-title">
-
-      <h2>
-        Simple. Fast. Clean.
-      </h2>
-
-      <p>
-        Everything you need for public Instagram Reels.
-      </p>
-
-    </div>
-
-
-    <section class="features">
+    <section class="container features">
 
       <div class="feature">
 
@@ -1013,8 +742,7 @@
         </h3>
 
         <p>
-          Paste your Reel link and start processing
-          without unnecessary steps.
+          Paste your Instagram Reel link and start processing instantly.
         </p>
 
       </div>
@@ -1027,12 +755,11 @@
         </div>
 
         <h3>
-          Video Preview
+          High Quality
         </h3>
 
         <p>
-          Preview your processed Reel before
-          saving it to your device.
+          Get the available video in the best quality provided by Instagram.
         </p>
 
       </div>
@@ -1045,25 +772,30 @@
         </div>
 
         <h3>
-          Simple & Clean
+          Simple & Private
         </h3>
 
         <p>
-          A clean interface designed to make
-          downloading easy.
+          No account is required to use the downloader.
         </p>
 
       </div>
 
     </section>
 
+  </main>
 
-    <footer>
-      © 2026 InstaHub AI
-    </footer>
 
-  </div>
+  <!-- FOOTER -->
 
+  <footer>
+    <div class="container">
+      © 2026 InstaHub AI · Instagram Reel Downloader
+    </div>
+  </footer>
+
+
+  <!-- JAVASCRIPT -->
 
   <script>
 
@@ -1132,16 +864,14 @@
 
       loadingText.textContent = text;
 
-      loading.style.display =
-        "flex";
+      loading.style.display = "flex";
 
     }
 
 
     function hideLoading() {
 
-      loading.style.display =
-        "none";
+      loading.style.display = "none";
 
     }
 
@@ -1166,8 +896,7 @@
 
       video.load();
 
-      result.style.display =
-        "none";
+      result.style.display = "none";
 
       downloadBtn.disabled = false;
 
@@ -1214,7 +943,10 @@
             await navigator.clipboard.readText();
 
 
-          if (!text || !text.trim()) {
+          if (
+            !text ||
+            !text.trim()
+          ) {
 
             showMessage(
               "Clipboard is empty. Copy an Instagram Reel link first.",
@@ -1263,3 +995,133 @@
 
 
     /* --------------------------------
+       ENTER KEY
+    -------------------------------- */
+
+    urlInput.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          processVideo();
+
+        }
+
+      }
+    );
+
+
+    /* --------------------------------
+       DOWNLOAD BUTTON
+    -------------------------------- */
+
+    downloadBtn.addEventListener(
+      "click",
+      processVideo
+    );
+
+
+    /* --------------------------------
+       PROCESS VIDEO
+    -------------------------------- */
+
+    async function processVideo() {
+
+      const link =
+        urlInput.value.trim();
+
+
+      result.style.display = "none";
+
+      video.pause();
+
+      video.removeAttribute("src");
+
+      video.load();
+
+      currentDownloadUrl = "";
+
+      showMessage("");
+
+
+      if (!link) {
+
+        showMessage(
+          "Please paste an Instagram Reel URL.",
+          "error"
+        );
+
+        urlInput.focus();
+
+        return;
+
+      }
+
+
+      if (
+        !link.includes("instagram.com/")
+      ) {
+
+        showMessage(
+          "Please enter a valid Instagram URL.",
+          "error"
+        );
+
+        urlInput.focus();
+
+        return;
+
+      }
+
+
+      downloadBtn.disabled = true;
+
+      pasteBtn.disabled = true;
+
+      clearBtn.disabled = true;
+
+
+      showLoading(
+        "Connecting to Instagram..."
+      );
+
+
+      try {
+
+        showLoading(
+          "Processing Reel..."
+        );
+
+
+        const controller =
+          new AbortController();
+
+
+        const timeout =
+          setTimeout(
+            function() {
+              controller.abort();
+            },
+            150000
+          );
+
+
+        const response =
+          await fetch(
+            "/download?link=" +
+            encodeURIComponent(link),
+            {
+              method: "GET",
+              signal: controller.signal,
+              cache: "no-store"
+            }
+          );
+
+
+        clearTimeout(timeout);
+
+
+        let data;
