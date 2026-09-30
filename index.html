@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>InstaHub AI - Instagram Reel Downloader</title>
+<title>InstaHub AI - Instagram Tools</title>
 
 <meta name="description"
-content="Download Instagram Reels quickly with InstaHub AI. Simple, fast and mobile friendly Instagram Reel Downloader.">
+content="InstaHub AI - Fast Instagram Reel and Post Downloader.">
 
 <style>
 *{
@@ -34,8 +34,6 @@ body{
   width:min(1050px,calc(100% - 30px));
   margin:auto;
 }
-
-/* HEADER */
 
 header{
   padding:18px 0;
@@ -74,8 +72,6 @@ header{
   font-size:12px;
 }
 
-/* HERO / DOWNLOADER */
-
 .hero{
   padding:38px 0 45px;
   text-align:center;
@@ -113,8 +109,6 @@ h1 span{
   line-height:1.6;
   font-size:15px;
 }
-
-/* DOWNLOADER */
 
 .downloader{
   max-width:820px;
@@ -204,8 +198,6 @@ button:disabled{
   padding:9px 7px 2px;
 }
 
-/* LOADING */
-
 .loading{
   display:none;
   max-width:820px;
@@ -248,8 +240,6 @@ button:disabled{
   font-size:12px;
 }
 
-/* MESSAGE */
-
 .message{
   display:none;
   max-width:820px;
@@ -275,8 +265,6 @@ button:disabled{
   background:rgba(34,197,94,.1);
   border:1px solid rgba(34,197,94,.22);
 }
-
-/* RESULT */
 
 .result{
   display:none;
@@ -327,8 +315,6 @@ video{
   background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.1);
 }
-
-/* TOOLS */
 
 .tools{
   padding:35px 0 70px;
@@ -411,8 +397,6 @@ video{
   background:rgba(255,255,255,.06);
 }
 
-/* FOOTER */
-
 footer{
   border-top:1px solid rgba(255,255,255,.06);
   padding:25px 0;
@@ -420,8 +404,6 @@ footer{
   color:#666672;
   font-size:11px;
 }
-
-/* MOBILE */
 
 @media(max-width:760px){
 
@@ -480,27 +462,25 @@ footer{
   </div>
 </header>
 
-
 <main>
 
 <section class="hero">
 
   <div class="container">
 
-    <div class="pill">
+    <div class="pill" id="toolPill">
       ⚡ Fast Instagram Reel Downloader
     </div>
 
-    <h1>
+    <h1 id="heroTitle">
       Download Instagram
-      <span>Reels.</span>
+      <span id="heroType">Reels.</span>
     </h1>
 
-    <p class="subtitle">
+    <p class="subtitle" id="heroSubtitle">
       Paste your Instagram Reel link below and download it quickly.
       Simple, fast and mobile friendly.
     </p>
-
 
     <div class="downloader">
 
@@ -520,7 +500,6 @@ footer{
 
         </div>
 
-
         <button
           id="pasteClearBtn"
           class="paste-btn"
@@ -528,7 +507,6 @@ footer{
         >
           📋 Paste
         </button>
-
 
         <button
           id="downloadBtn"
@@ -540,46 +518,27 @@ footer{
 
       </div>
 
-
-      <div class="hint">
+      <div class="hint" id="hint">
         Works with public Instagram Reel links.
       </div>
 
     </div>
 
-
-    <div
-      id="loading"
-      class="loading"
-    >
+    <div id="loading" class="loading">
 
       <div class="loader"></div>
 
-      <div
-        id="loadingText"
-        class="loading-text"
-      >
+      <div id="loadingText" class="loading-text">
         Preparing your Reel...
       </div>
 
     </div>
 
+    <div id="message" class="message"></div>
 
-    <div
-      id="message"
-      class="message"
-    ></div>
+    <div id="result" class="result">
 
-
-    <div
-      id="result"
-      class="result"
-    >
-
-      <div
-        id="title"
-        class="result-title"
-      >
+      <div id="title" class="result-title">
         Instagram Reel
       </div>
 
@@ -589,7 +548,6 @@ footer{
         playsinline
         preload="metadata"
       ></video>
-
 
       <div class="actions">
 
@@ -617,7 +575,6 @@ footer{
 
 </section>
 
-
 <section class="tools">
 
   <div class="container">
@@ -627,16 +584,14 @@ footer{
     </h2>
 
     <p class="section-subtitle">
-      More useful Instagram tools coming soon.
+      Download and manage public Instagram content.
     </p>
-
 
     <div class="grid">
 
-
       <div
         class="card available"
-        onclick="scrollToDownloader()"
+        onclick="openTool('reel')"
       >
 
         <div class="icon">🎬</div>
@@ -654,10 +609,9 @@ footer{
 
       </div>
 
-
       <div
-        class="card"
-        onclick="comingSoon('Post Downloader')"
+        class="card available"
+        onclick="openTool('post')"
       >
 
         <div class="icon">📸</div>
@@ -665,21 +619,17 @@ footer{
         <h3>Post Downloader</h3>
 
         <p>
-          Download Instagram photo and
-          video posts.
+          Download public Instagram video
+          posts using a link.
         </p>
 
-        <span class="status soon">
-          Coming Soon
+        <span class="status live">
+          ● Available
         </span>
 
       </div>
 
-
-      <div
-        class="card"
-        onclick="comingSoon('Story Downloader')"
-      >
+      <div class="card">
 
         <div class="icon">📖</div>
 
@@ -696,11 +646,7 @@ footer{
 
       </div>
 
-
-      <div
-        class="card"
-        onclick="comingSoon('Profile Downloader')"
-      >
+      <div class="card">
 
         <div class="icon">👤</div>
 
@@ -717,11 +663,7 @@ footer{
 
       </div>
 
-
-      <div
-        class="card"
-        onclick="comingSoon('Profile Picture Downloader')"
-      >
+      <div class="card">
 
         <div class="icon">🖼️</div>
 
@@ -738,11 +680,7 @@ footer{
 
       </div>
 
-
-      <div
-        class="card"
-        onclick="comingSoon('Highlight Downloader')"
-      >
+      <div class="card">
 
         <div class="icon">⭐</div>
 
@@ -767,11 +705,9 @@ footer{
 
 </main>
 
-
 <footer>
   © 2026 InstaHub AI · Instagram Tools
 </footer>
-
 
 <script>
 
@@ -808,10 +744,21 @@ const saveBtn =
 const nextBtn =
   document.getElementById("nextBtn");
 
+const toolPill =
+  document.getElementById("toolPill");
+
+const heroType =
+  document.getElementById("heroType");
+
+const heroSubtitle =
+  document.getElementById("heroSubtitle");
+
+const hint =
+  document.getElementById("hint");
+
 let currentDownloadUrl = "";
+let currentTool = "reel";
 
-
-/* PASTE / CLEAR BUTTON */
 
 function updatePasteClearButton(){
 
@@ -836,8 +783,6 @@ urlInput.addEventListener(
 );
 
 
-/* PASTE / CLEAR */
-
 pasteClearBtn.addEventListener(
   "click",
   async function(){
@@ -857,7 +802,6 @@ pasteClearBtn.addEventListener(
       return;
     }
 
-
     try{
 
       const text =
@@ -866,7 +810,7 @@ pasteClearBtn.addEventListener(
       if(!text){
 
         showMessage(
-          "Clipboard is empty. Copy an Instagram Reel link first.",
+          "Clipboard is empty. Copy an Instagram link first.",
           "error"
         );
 
@@ -895,8 +839,6 @@ pasteClearBtn.addEventListener(
 );
 
 
-/* MESSAGE */
-
 function showMessage(text,type){
 
   message.textContent =
@@ -919,8 +861,6 @@ function hideMessage(){
 }
 
 
-/* LOADING */
-
 function showLoading(text){
 
   loadingText.textContent =
@@ -942,8 +882,6 @@ function hideLoading(){
 }
 
 
-/* RESULT */
-
 function hideResult(){
 
   result.classList.remove(
@@ -963,8 +901,6 @@ function hideResult(){
 
 }
 
-
-/* URL CHECK */
 
 function validInstagramUrl(url){
 
@@ -991,29 +927,89 @@ function validInstagramUrl(url){
 }
 
 
-/* DOWNLOAD */
+function openTool(type){
 
-downloadBtn.addEventListener(
-  "click",
-  downloadReel
-);
+  currentTool =
+    type;
 
+  urlInput.value = "";
 
-async function downloadReel(){
-
-  const link =
-    urlInput.value.trim();
-
+  updatePasteClearButton();
 
   hideMessage();
 
   hideResult();
 
+  if(type === "post"){
+
+    toolPill.textContent =
+      "⚡ Fast Instagram Post Downloader";
+
+    heroType.textContent =
+      "Posts.";
+
+    heroSubtitle.textContent =
+      "Paste your public Instagram video post link below and download it quickly.";
+
+    urlInput.placeholder =
+      "Paste Instagram Post link here...";
+
+    hint.textContent =
+      "Works with public Instagram video post links.";
+
+  }else{
+
+    toolPill.textContent =
+      "⚡ Fast Instagram Reel Downloader";
+
+    heroType.textContent =
+      "Reels.";
+
+    heroSubtitle.textContent =
+      "Paste your Instagram Reel link below and download it quickly.";
+
+    urlInput.placeholder =
+      "Paste Instagram Reel link here...";
+
+    hint.textContent =
+      "Works with public Instagram Reel links.";
+
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  setTimeout(
+    () => urlInput.focus(),
+    500
+  );
+
+}
+
+
+downloadBtn.addEventListener(
+  "click",
+  downloadContent
+);
+
+
+async function downloadContent(){
+
+  const link =
+    urlInput.value.trim();
+
+  hideMessage();
+
+  hideResult();
 
   if(!link){
 
     showMessage(
-      "Please paste an Instagram Reel link first.",
+      currentTool === "post"
+      ? "Please paste an Instagram Post link first."
+      : "Please paste an Instagram Reel link first.",
       "error"
     );
 
@@ -1021,7 +1017,6 @@ async function downloadReel(){
 
     return;
   }
-
 
   if(!validInstagramUrl(link)){
 
@@ -1035,18 +1030,17 @@ async function downloadReel(){
     return;
   }
 
-
   downloadBtn.disabled =
     true;
 
   pasteClearBtn.disabled =
     true;
 
-
   showLoading(
-    "Downloading your Reel..."
+    currentTool === "post"
+    ? "Downloading your Post..."
+    : "Downloading your Reel..."
   );
-
 
   try{
 
@@ -1060,9 +1054,7 @@ async function downloadReel(){
         }
       );
 
-
     let data;
-
 
     try{
 
@@ -1077,7 +1069,6 @@ async function downloadReel(){
 
     }
 
-
     if(
       !response.ok ||
       !data.success
@@ -1091,7 +1082,6 @@ async function downloadReel(){
 
     }
 
-
     if(!data.mediaUrl){
 
       throw new Error(
@@ -1099,7 +1089,6 @@ async function downloadReel(){
       );
 
     }
-
 
     currentDownloadUrl =
       data.downloadUrl
@@ -1109,41 +1098,36 @@ async function downloadReel(){
         ).href
       : "";
 
-
     video.src =
       new URL(
         data.mediaUrl,
         window.location.origin
       ).href;
 
-
     title.textContent =
-      data.title ||
-      "Instagram Reel";
-
+      currentTool === "post"
+      ? "Instagram Post"
+      : (data.title || "Instagram Reel");
 
     result.classList.add(
       "active"
     );
 
-
     hideLoading();
 
-
     showMessage(
-      "Reel is ready. You can preview or download it.",
+      currentTool === "post"
+      ? "Post is ready. You can preview or download it."
+      : "Reel is ready. You can preview or download it.",
       "success"
     );
-
 
     result.scrollIntoView({
       behavior:"smooth",
       block:"start"
     });
 
-
     video.load();
-
 
   }catch(error){
 
@@ -1175,8 +1159,6 @@ async function downloadReel(){
 }
 
 
-/* SAVE */
-
 saveBtn.addEventListener(
   "click",
   function(){
@@ -1197,8 +1179,6 @@ saveBtn.addEventListener(
   }
 );
 
-
-/* NEXT */
 
 nextBtn.addEventListener(
   "click",
@@ -1223,8 +1203,6 @@ nextBtn.addEventListener(
 );
 
 
-/* VIDEO ERROR */
-
 video.addEventListener(
   "error",
   function(){
@@ -1238,8 +1216,6 @@ video.addEventListener(
 );
 
 
-/* ENTER */
-
 urlInput.addEventListener(
   "keydown",
   function(event){
@@ -1248,48 +1224,13 @@ urlInput.addEventListener(
 
       event.preventDefault();
 
-      downloadReel();
+      downloadContent();
 
     }
 
   }
 );
 
-
-/* TOOL CARDS */
-
-function scrollToDownloader(){
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-  setTimeout(
-    () => urlInput.focus(),
-    500
-  );
-
-}
-
-
-function comingSoon(name){
-
-  showMessage(
-    name +
-    " is coming soon. Reel Downloader is available now.",
-    "success"
-  );
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* START */
 
 updatePasteClearButton();
 
