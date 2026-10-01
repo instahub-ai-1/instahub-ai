@@ -286,12 +286,28 @@ button:disabled{
   margin-bottom:12px;
 }
 
-video{
+.media-preview{
   width:100%;
   max-height:520px;
   display:block;
   background:#000;
   border-radius:13px;
+  overflow:hidden;
+}
+
+.media-preview video{
+  width:100%;
+  max-height:520px;
+  display:block;
+  background:#000;
+}
+
+.media-preview img{
+  width:100%;
+  max-height:520px;
+  display:block;
+  object-fit:contain;
+  background:#000;
 }
 
 .actions{
@@ -542,12 +558,22 @@ footer{
         Instagram Reel
       </div>
 
-      <video
-        id="video"
-        controls
-        playsinline
-        preload="metadata"
-      ></video>
+      <div id="mediaPreview" class="media-preview">
+
+        <video
+          id="video"
+          controls
+          playsinline
+          preload="metadata"
+        ></video>
+
+        <img
+          id="image"
+          alt="Instagram Post"
+          style="display:none;"
+        >
+
+      </div>
 
       <div class="actions">
 
@@ -556,7 +582,7 @@ footer{
           class="save-btn"
           type="button"
         >
-          ⬇ Download Video
+          ⬇ Download
         </button>
 
         <button
@@ -620,7 +646,7 @@ footer{
 
         <p>
           Download public Instagram video
-          posts using a link.
+          and photo posts.
         </p>
 
         <span class="status live">
@@ -734,6 +760,9 @@ const result =
 
 const video =
   document.getElementById("video");
+
+const image =
+  document.getElementById("image");
 
 const title =
   document.getElementById("title");
@@ -896,6 +925,16 @@ function hideResult(){
 
   video.load();
 
+  image.removeAttribute(
+    "src"
+  );
+
+  image.style.display =
+    "none";
+
+  video.style.display =
+    "block";
+
   currentDownloadUrl =
     "";
 
@@ -949,13 +988,13 @@ function openTool(type){
       "Posts.";
 
     heroSubtitle.textContent =
-      "Paste your public Instagram video post link below and download it quickly.";
+      "Paste your public Instagram Post link below and download video or photo posts.";
 
     urlInput.placeholder =
       "Paste Instagram Post link here...";
 
     hint.textContent =
-      "Works with public Instagram video post links.";
+      "Works with public Instagram video and photo posts.";
 
   }else{
 
@@ -1077,7 +1116,7 @@ async function downloadContent(){
       throw new Error(
         data.error ||
         data.message ||
-        "Video download failed."
+        "Download failed."
       );
 
     }
@@ -1085,7 +1124,7 @@ async function downloadContent(){
     if(!data.mediaUrl){
 
       throw new Error(
-        "Video URL was not returned by server."
+        "Media URL was not returned by server."
       );
 
     }
@@ -1098,7 +1137,7 @@ async function downloadContent(){
         ).href
       : "";
 
-    video.src =
+    const mediaUrl =
       new URL(
         data.mediaUrl,
         window.location.origin
@@ -1108,6 +1147,48 @@ async function downloadContent(){
       currentTool === "post"
       ? "Instagram Post"
       : (data.title || "Instagram Reel");
+
+    if(data.type === "image"){
+
+      video.pause();
+
+      video.removeAttribute(
+        "src"
+      );
+
+      video.style.display =
+        "none";
+
+      image.src =
+        mediaUrl;
+
+      image.style.display =
+        "block";
+
+      saveBtn.textContent =
+        "⬇ Download Image";
+
+    }else{
+
+      image.removeAttribute(
+        "src"
+      );
+
+      image.style.display =
+        "none";
+
+      video.style.display =
+        "block";
+
+      video.src =
+        mediaUrl;
+
+      saveBtn.textContent =
+        "⬇ Download Video";
+
+      video.load();
+
+    }
 
     result.classList.add(
       "active"
@@ -1126,8 +1207,6 @@ async function downloadContent(){
       behavior:"smooth",
       block:"start"
     });
-
-    video.load();
 
   }catch(error){
 
@@ -1207,10 +1286,34 @@ video.addEventListener(
   "error",
   function(){
 
-    showMessage(
-      "Video preview failed. Try Download Video.",
-      "error"
-    );
+    if(
+      currentTool === "reel" ||
+      video.style.display !== "none"
+    ){
+
+      showMessage(
+        "Video preview failed. Try Download Video.",
+        "error"
+      );
+
+    }
+
+  }
+);
+
+
+image.addEventListener(
+  "error",
+  function(){
+
+    if(image.style.display !== "none"){
+
+      showMessage(
+        "Image preview failed. Try Download Image.",
+        "error"
+      );
+
+    }
 
   }
 );
